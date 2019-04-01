@@ -13,23 +13,53 @@ let fillUps = new Map();
 async function main() {
   records = await fs.readJson(inputFile);
 
-  for (const key of Object.keys(records.vehicles)) {
-    const record = records.vehicles[key];
-    record.id = uuid.generate();
-    vehicles.set(record.id, record);
-  }
-
+  // update services and fillups first
   for (const key of Object.keys(records.services)) {
     const record = records.services[key];
-    record.id = uuid.generate();
-    services.set(record.id, record);
-  }
-  for (const key of Object.keys(records.fillUps)) {
-    const record = records.fillUps[key];
-    record.id = uuid.generate();
-    fillUps.set(record.id, record);
+    record.uid = uuid.generate();
+    services.set(record.uid, record);
   }
 
+  for (const key of Object.keys(records.fillUps)) {
+    const record = records.fillUps[key];
+    record.uid = uuid.generate();
+    fillUps.set(record.uid, record);
+  }
+
+  // process each vehicle
+  const servicesArray = [...services.values()]
+  const fillUpsArray = [...fillUps.values()]
+  for (const key of Object.keys(records.vehicles)) {
+    const record = records.vehicles[key];
+    record.uid = uuid.generate();
+
+    record.serviceIDs.forEach(index => {
+      const service = servicesArray.find(item => {
+        return item.id === index;
+      });
+
+      if (service) {
+        service.vehicleId = record.uid;
+        delete service.id;
+      }
+    });
+
+    record.fuelIDs.forEach(index => {
+      const fillUp = fillUpsArray.find(item => {
+        return item.id === index;
+      });
+
+      if (fillUp) {
+        fillUp.vehicleId = record.uid;
+        delete fillUp.id;
+      }
+    });
+
+    delete record.serviceIDs;
+    delete record.fuelIDs;
+    delete record.id;
+    vehicles.set(record.uid, record);
+  }
 
 
   let output = {
@@ -39,6 +69,15 @@ async function main() {
   }
 
   await fs.writeJson(outputFile, output, { spaces: 2 });
+
+  let newRecs = await fs.readJSON(outputFile);
+
+  let nv = new Map(newRecs.vehicles)
+  let ns = new Map(newRecs.services)
+  let nf = new Map(newRecs.fillUps)
+
+
+  console.log(nv)
 }
 
 
