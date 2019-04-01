@@ -4,12 +4,14 @@
   "description": "convert records.json to jalopy.json",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "tsc -w"
   },
   "author": "lokidokicoki",
   "license": "ISC",
   "dependencies": {
-    "fs-extra": "^7.0.1"
+    "fs-extra": "^7.0.1",
+    "short-uuid": "^3.1.0"
   },
   "devDependencies": {
     "typedoc": "^0.14.2"
