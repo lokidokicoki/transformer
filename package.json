@@ -1,0 +1,17 @@
+{
+  "name": "transformer",
+  "version": "1.0.0",
+  "description": "convert records.json to jalopy.json",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "lokidokicoki",
+  "license": "ISC",
+  "dependencies": {
+    "fs-extra": "^7.0.1"
+  },
+  "devDependencies": {
+    "typedoc": "^0.14.2"
+  }
+}
